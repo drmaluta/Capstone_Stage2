@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- list -->
+    <dimen name="list_side_margin">4dp</dimen>
+    <dimen name="list_toolbar_side_margin">0dp</dimen>
+    <dimen name="list_top_margin">16dp</dimen>
+    <dimen name="list_bottom_margin">16dp</dimen>
+    <dimen name="article_item_height">100sp</dimen>
+    <dimen name="article_item_ad_height">45dp</dimen>
+    <item name="article_item_image_fraction" format="float" type="fraction">0.4</item>
+    <dimen name="article_item_horizontal_margin">8dp</dimen>
+    <dimen name="article_item_vertical_margin">4dp</dimen>
+    <dimen name="article_item_inner_padding">10dp</dimen>
+    <dimen name="article_item_title_text_size">16sp</dimen>
+    <item name="article_item_title_line_spacing_multiplier" format="float" type="fraction">0.9</item>
+    <item name="article_item_title_max_lines" format="integer" type="fraction">3</item>
+</resources>

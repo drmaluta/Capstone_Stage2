@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">News Now</string>
+    <string name="by_author">by %1$s</string>
+    <string name="on_date">on %1$s</string>
+    <string name="action_share">Share</string>
+    <string name="action_add_to_favorite">Add to favorite</string>
+    <string name="action_remove_from_favorite">Remove from favorite</string>
+    <string name="article_image">Article image</string>
+    <string name="release_date_error">Error while loading Date</string>
+    <string name="read_more_at_source"><Data><![CDATA[ Read more at <a href="%2$s">%1$s</a> ]]></Data></string>
+    <string name="source_link"><Data><![CDATA[ <a href="%2$s">%1$s</a> ]]></Data></string>
+    <string name="error_loading_data">Can\'t find any article...</string>
+</resources>
