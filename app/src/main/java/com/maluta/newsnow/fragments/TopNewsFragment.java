@@ -39,7 +39,7 @@ public class TopNewsFragment extends Fragment implements ArticleListAdapter.Item
     private ArticleListener articleClickListener;
 
     public interface ArticleListener {
-        void onArticleClicked(Article article);
+        void onArticleClicked(ArrayList<Article> articles, int  pos);
     }
 
     @Override
@@ -93,7 +93,7 @@ public class TopNewsFragment extends Fragment implements ArticleListAdapter.Item
     }
 
     @Override
-    public void onClick(Article article) {
-        articleClickListener.onArticleClicked(article);
+    public void onClick(ArrayList<Article> articles, int position) {
+        articleClickListener.onArticleClicked(articles, position);
     }
 }

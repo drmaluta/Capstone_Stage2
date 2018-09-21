@@ -1,0 +1,182 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/draw_insets_frame_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/detail_appbar_height"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/collapsingToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:collapsedTitleTextAppearance="@style/CollapsedTitle"
+            app:expandedTitleTextAppearance="@style/ExpandedTitle"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+
+            <FrameLayout
+                android:id="@+id/photo_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_collapseMode="parallax"
+                app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
+
+                <ImageView
+                    android:id="@+id/photo"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/article_image"
+                    android:fitsSystemWindows="true" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/photo_background_protection" />
+
+                <LinearLayout
+                    android:id="@+id/meta_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/detail_inner_horiz_margin"
+                    android:paddingRight="@dimen/detail_inner_horiz_margin"
+                    android:paddingTop="@dimen/detail_metabar_vert_padding"
+                    android:padding="@dimen/detail_metabar_vert_padding"
+                    android:layout_marginBottom="@dimen/detail_metabar_vert_padding"
+                    app:layout_collapseMode="parallax"
+                    app:layout_scrollFlags="scroll|enterAlways|enterAlwaysCollapsed">
+
+
+                    <TextView
+                        android:id="@+id/article_title"
+                        style="?android:attr/textAppearanceMedium"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/detail_metabar_title_bottom_padding"
+                        android:textColor="@color/icons"
+                        android:textStyle="bold"
+                        android:lineSpacingMultiplier="0.9"
+                        tools:text="Blind-Assistance App Be My Eyes Is Now on Android" />
+
+                    <TextView
+                        android:id="@+id/tv_author_published_on_date"
+                        style="?android:attr/textAppearanceSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/icons"
+                        android:maxLines="1"
+                        tools:text="by Nick Douglas on 10/05/2017"/>
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/detail_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:layout_collapseMode="pin">
+
+                <ImageButton
+                    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                    android:id="@+id/action_up"
+                    android:layout_width="56dp"
+                    android:layout_height="?actionBarSize"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/up"
+                    android:src="@drawable/ic_arrow_back" />
+
+            </android.support.v7.widget.Toolbar>
+
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingStart="@dimen/fragment_article_details_description_padding_left"
+                android:paddingEnd="@dimen/fragment_article_details_description_padding_right"
+                android:paddingTop="@dimen/fragment_article_details_description_padding_top"
+                android:textSize="@dimen/fragment_article_details_description_text_size"
+                android:lineSpacingMultiplier="@fraction/fragment_article_details_description_line_spacing_multiplier"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_title"
+                tools:text="Image via Be My Eyes Be My Eyes, an app that lets sighted people remotely help blind people with visual tasks, is now available on Android, after two years on iOS. The app is free, anonymous, and available 24/7. Anyone can join as a volunteer or end user. The…" />
+
+            <TextView
+                android:id="@+id/tv_source"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/fragment_article_details_description_padding_bottom"
+                android:paddingStart="@dimen/fragment_article_details_description_padding_left"
+                android:paddingEnd="@dimen/fragment_article_details_description_padding_right"
+                android:paddingTop="4sp"
+                android:textSize="@dimen/fragment_article_details_description_text_size"
+                android:autoLink="web"
+                android:linksClickable="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_description"
+                tools:text="Read more at Kinja.com" />
+
+            <Button
+                android:id="@+id/share_fab"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="36dp"
+                android:background="@drawable/share"
+                android:clickable="true"
+                android:elevation="@dimen/fab_elevation"
+                android:focusable="true"
+                android:text="@string/action_share"
+                android:textColor="#FFF"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_source" />
+        </android.support.constraint.ConstraintLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/bookmark_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@drawable/ic_share"
+        android:contentDescription="@string/action_share"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="@drawable/add_fab_background"
+        android:stateListAnimator="@anim/fab_state_list_anim"
+        app:backgroundTint="@color/colorAccent"
+        app:fabSize="normal"
+        app:rippleColor="@color/black"
+        app:elevation="@dimen/fab_elevation"
+        app:layout_anchor="@id/appbar"
+        app:layout_anchorGravity="bottom|end"
+        app:pressedTranslationZ="@dimen/fab_press_translation_z"/>
+
+</android.support.design.widget.CoordinatorLayout>

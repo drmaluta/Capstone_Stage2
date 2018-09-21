@@ -1,5 +1,6 @@
 package com.maluta.newsnow;
 
+import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +11,8 @@ import com.maluta.newsnow.models.Article;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,6 +25,9 @@ public class MainActivity extends AppCompatActivity implements TopNewsFragment.A
     ViewPager viewPager;
     @BindView(R.id.toolbar)
     Toolbar mToolBar;
+
+    public static final String EXTRA_ARTICLES = "extra.articles";
+    public static final String EXTRA_SELECTED_INDEX = "extra.selected_index";
 
 
     @Override
@@ -61,12 +67,18 @@ public class MainActivity extends AppCompatActivity implements TopNewsFragment.A
     }
 
     @Override
-    public void onArticleClicked(Article article) {
-
+    public void onArticleClicked(ArrayList<Article> articles, int position) {
+        Intent intent = new Intent(this, ArticleDetailsActivity.class);
+        intent.putParcelableArrayListExtra(EXTRA_ARTICLES, articles);
+        intent.putExtra(EXTRA_SELECTED_INDEX, position);
+        startActivity(intent);
     }
 
     @Override
-    public void onAllNewsArticleClicked(Article article) {
-
+    public void onAllNewsArticleClicked(ArrayList<Article> articles, int position) {
+        Intent intent = new Intent(this, ArticleDetailsActivity.class);
+        intent.putParcelableArrayListExtra(EXTRA_ARTICLES, articles);
+        intent.putExtra(EXTRA_SELECTED_INDEX, position);
+        startActivity(intent);
     }
 }

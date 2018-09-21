@@ -60,6 +60,7 @@
             android:padding="@dimen/article_item_inner_padding"
             android:maxLines="1"
             android:autoLink="web"
+            android:linksClickable="true"
             android:ellipsize="end"
             android:textColor="?android:textColorSecondary"
             app:layout_constraintBottom_toBottomOf="parent"

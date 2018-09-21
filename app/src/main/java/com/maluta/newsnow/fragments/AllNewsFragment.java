@@ -47,7 +47,7 @@ public class AllNewsFragment extends Fragment implements ArticleListAdapter.Item
     private int currentPage = PAGE_START;
 
     public interface AllNewsArticleListener {
-        void onAllNewsArticleClicked(Article article);
+        void onAllNewsArticleClicked(ArrayList<Article> articles, int  pos);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class AllNewsFragment extends Fragment implements ArticleListAdapter.Item
     }
 
     @Override
-    public void onClick(Article article) {
-        articleClickListener.onAllNewsArticleClicked(article);
+    public void onClick(ArrayList<Article> articles, int position) {
+        articleClickListener.onAllNewsArticleClicked(articles, position);
     }
 }

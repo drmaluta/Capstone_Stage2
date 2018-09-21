@@ -32,7 +32,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     private ItemClickListener mItemClickListener;
 
     public interface ItemClickListener {
-        void onClick(Article article);
+        void onClick(ArrayList<Article> articles, int position);
     }
 
     public ArticleListAdapter(ItemClickListener itemClickListener) {
@@ -109,7 +109,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-            mItemClickListener.onClick(articles.get(position));
+            mItemClickListener.onClick(articles, position);
         }
     }
 }

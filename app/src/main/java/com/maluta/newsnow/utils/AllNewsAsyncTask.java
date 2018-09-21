@@ -45,7 +45,7 @@ public class AllNewsAsyncTask extends AsyncTask<String, Void, ArrayList<Article>
             Response<ArticlesResponse> rp = call.execute();
             return rp.body().getResults();
         } catch (IOException e) {
-            Timber.e("error in getting response from service using retrofit", e);
+            Timber.e("error in getting response from service using retrofit");
         }
         return null;
     }
