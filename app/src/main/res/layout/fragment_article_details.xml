@@ -165,7 +165,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_share"
         android:contentDescription="@string/action_share"
         android:clickable="true"
         android:focusable="true"
@@ -175,6 +174,7 @@
         app:fabSize="normal"
         app:rippleColor="@color/black"
         app:elevation="@dimen/fab_elevation"
+        tools:src="@drawable/ic_bookmark_empty"
         app:layout_anchor="@id/appbar"
         app:layout_anchorGravity="bottom|end"
         app:pressedTranslationZ="@dimen/fab_press_translation_z"/>

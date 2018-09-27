@@ -1,5 +1,7 @@
 package com.maluta.newsnow.models;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Ignore;
 import android.os.Parcel;
 import android.os.Parcelable;
 import com.google.gson.annotations.Expose;
@@ -10,9 +12,11 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class Source implements Parcelable {
+    @ColumnInfo(name = "source_id")
     @SerializedName("id")
     @Expose
     private String id;
+    @ColumnInfo(name = "source_name")
     @SerializedName("name")
     @Expose
     private String name;
@@ -22,6 +26,7 @@ public class Source implements Parcelable {
      * No args constructor for use in serialization
      *
      */
+    @Ignore
     public Source() {
     }
 

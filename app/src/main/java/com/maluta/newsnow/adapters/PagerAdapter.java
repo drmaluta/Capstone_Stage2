@@ -8,6 +8,7 @@ import com.maluta.newsnow.fragments.AllNewsFragment;
 import com.maluta.newsnow.fragments.FavoritesFragment;
 import com.maluta.newsnow.fragments.TopNewsFragment;
 
+
 /**
  * Created by admin on 9/10/2018.
  */
@@ -15,9 +16,11 @@ import com.maluta.newsnow.fragments.TopNewsFragment;
 public class PagerAdapter extends FragmentPagerAdapter {
     int numberOfTabs;
 
+
     public PagerAdapter(FragmentManager fm, int NumOfTabs) {
         super(fm);
         this.numberOfTabs = NumOfTabs;
+
     }
 
     @Override

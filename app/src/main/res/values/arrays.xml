@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Label ordering must match values -->
+    <array name="pref_language_option_labels">
+        <item>@string/pref_language_label_english</item>
+        <item>@string/pref_language_label_french</item>
+        <item>@string/pref_language_label_russian</item>
+        <item>@string/pref_language_label_spanish</item>
+    </array>
+
+    <array name="pref_language_option_values">
+        <item>@string/pref_language_english_value</item>
+        <item>@string/pref_language_french_value</item>
+        <item>@string/pref_language_russian_value</item>
+        <item>@string/pref_language_spanish_value</item>
+    </array>
+
+    <array name="pref_sources_option_labels">
+        <item>@string/pref_sources_label_all</item>
+        <item>@string/pref_sources_label_abc_news</item>
+        <item>@string/pref_sources_label_bbc_news</item>
+        <item>@string/pref_sources_label_cbs_news</item>
+        <item>@string/pref_sources_label_cnbc</item>
+        <item>@string/pref_sources_label_cnn</item>
+        <item>@string/pref_sources_label_fox_news</item>
+        <item>@string/pref_sources_label_msnbc</item>
+        <item>@string/pref_sources_label_nbc_news</item>
+    </array>
+
+    <array name="pref_sources_option_values">
+        <item>@string/pref_sources_all_value</item>
+        <item>@string/pref_sources_abc_news_value</item>
+        <item>@string/pref_sources_bbc_news_value</item>
+        <item>@string/pref_sources_cbs_news_value</item>
+        <item>@string/pref_sources_cnbc_value</item>
+        <item>@string/pref_sources_cnn_value</item>
+        <item>@string/pref_sources_fox_news_value</item>
+        <item>@string/pref_sources_msnbc_value</item>
+        <item>@string/pref_sources_nbc_news_value</item>
+    </array>
+
+</resources>

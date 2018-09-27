@@ -2,7 +2,6 @@ package com.maluta.newsnow.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,8 +21,11 @@ import android.widget.TextView;
 
 import com.maluta.newsnow.ArticleDetailsActivity;
 import com.maluta.newsnow.R;
+import com.maluta.newsnow.database.AppDatabase;
+import com.maluta.newsnow.database.AppExecutors;
 import com.maluta.newsnow.models.Article;
 import com.maluta.newsnow.utils.DateConverter;
+import com.maluta.newsnow.widget.WidgetUpdateService;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -32,6 +34,8 @@ import butterknife.ButterKnife;
 public class ArticleDetailsFragment extends Fragment {
     @BindView(R.id.share_fab)
     Button mShareFAB;
+    @BindView(R.id.bookmark_fab)
+    FloatingActionButton mBookmarkFAB;
     @BindView(R.id.action_up)
     ImageButton mUpButton;
     @BindView(R.id.photo)
@@ -48,10 +52,11 @@ public class ArticleDetailsFragment extends Fragment {
     CollapsingToolbarLayout mCollapsingToolbar;
 
     public static final String ARGUMENT_ARTICLE = "arg.article";
-
-
-
     private Article mArticle;
+    private AppDatabase mDb;
+    private Context mContext;
+    private boolean mFavorite;
+
 
 
 
@@ -69,27 +74,43 @@ public class ArticleDetailsFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        mContext = getActivity().getApplicationContext();
+
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (getArguments() != null) {
+            mArticle = getArguments().getParcelable(ARGUMENT_ARTICLE);
+        }
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_article_details, container, false);
         ButterKnife.bind(this, view);
         initUpButtonOnClickListener();
         initShareOnClickListener();
+
+        mFavorite = mArticle.isFavorite();
+
+        mBookmarkFAB.setImageDrawable(mContext.getResources()
+                .getDrawable(mFavorite ? R.drawable.ic_bookmark : R.drawable.ic_bookmark_empty));
+        initBookmarkFAB();
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        if (getArguments() != null) {
-            mArticle = getArguments().getParcelable(ARGUMENT_ARTICLE);
-        }
-        Context context = getActivity().getApplicationContext();
+
+
+
         String imageUri = mArticle.getUrlToImage();
 
         if (!TextUtils.isEmpty(imageUri) || imageUri != null) {
-            Picasso.with(context).load(imageUri)
+            Picasso.with(mContext).load(imageUri)
                     .placeholder(R.drawable.ic_newspaper_color)
                     .error(R.drawable.ic_newspaper_color)
                     .into(mArticleImageView);
@@ -99,10 +120,11 @@ public class ArticleDetailsFragment extends Fragment {
 
         mTitleTextView.setText(mArticle.getTitle() == null ? "N/A" : mArticle.getTitle());
         mCollapsingToolbar.setTitle(mArticle.getTitle() == null ? "N/A" : mArticle.getTitle());
-        mAuthorPublishedOnDateTextView.setText((mArticle.getAuthor() == null ? "N/A" : String.format(context.getResources().getString(R.string.by_author), mArticle.getAuthor())) + " " + (mArticle.getPublishedAt() ==null ? "" : String.format(context.getResources().getString(R.string.on_date), DateConverter.dateToShortDateFormat(context, mArticle.getPublishedAt()))));
+        mAuthorPublishedOnDateTextView.setText((mArticle.getAuthor() == null ? "N/A" : String.format(mContext.getResources().getString(R.string.by_author), mArticle.getAuthor())) + " " + (mArticle.getPublishedAt() ==null ? "" : String.format(mContext.getResources().getString(R.string.on_date), DateConverter.dateToShortDateFormat(mContext, mArticle.getPublishedAt()))));
         mDescriptionTextView.setText(mArticle.getDescription());
-        mSourceTextView.setText(mArticle.getSource().getName() == null ? "" : Html.fromHtml(String.format(context.getResources().getString(R.string.read_more_at_source), mArticle.getSource().getName(), mArticle.getUrl())));
+        mSourceTextView.setText(mArticle.getSource().getName() == null ? "" : Html.fromHtml(String.format(mContext.getResources().getString(R.string.read_more_at_source), mArticle.getSource().getName(), mArticle.getUrl())));
     }
+
 
 
     private void initShareOnClickListener() {
@@ -117,11 +139,51 @@ public class ArticleDetailsFragment extends Fragment {
         });
     }
 
+    private void initBookmarkFAB(){
+        mBookmarkFAB.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDb = AppDatabase.getInstance(mContext);
+                if (mFavorite) {
+                    mFavorite = false;
+                    mBookmarkFAB.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_bookmark_empty));
+                    deleteArticle();
+                } else {
+                    mFavorite = true;
+                    mBookmarkFAB.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_bookmark));
+                    addArticle();
+                }
+                WidgetUpdateService.startActionUpdateFavoriteArticlesWidgets(mContext);
+            }
+        });
+
+    }
+
+    private void addArticle(){
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mArticle.setFavorite(true);
+                mDb.articleDao().insertArticle(mArticle);
+            }
+        });
+    }
+
+    private void deleteArticle(){
+        AppExecutors.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                mArticle.setFavorite(false);
+                mDb.articleDao().deleteArticle(mArticle);
+            }
+        });
+    }
+
     private void initUpButtonOnClickListener(){
         mUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivityCast().onSupportNavigateUp();
+                getActivityCast().finish();
             }
         });
     }
@@ -129,11 +191,4 @@ public class ArticleDetailsFragment extends Fragment {
     public ArticleDetailsActivity getActivityCast() {
         return (ArticleDetailsActivity) getActivity();
     }
-
-
-
-
-
-
-
 }

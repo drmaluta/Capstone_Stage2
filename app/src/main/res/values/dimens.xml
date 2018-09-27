@@ -12,7 +12,8 @@
     <dimen name="article_item_vertical_margin">4dp</dimen>
     <dimen name="article_item_inner_padding">10dp</dimen>
     <dimen name="article_item_title_text_size">16sp</dimen>
-    <item name="article_item_title_line_spacing_multiplier" format="float" type="fraction">0.9</item>
+    <item name="article_item_title_line_spacing_multiplier" format="float" type="fraction">0.9
+    </item>
     <item name="article_item_title_max_lines" format="integer" type="fraction">3</item>
 
     <dimen name="detail_appbar_height">324dp</dimen>
@@ -25,7 +26,9 @@
     <dimen name="fragment_article_details_description_padding_left">15dp</dimen>
     <dimen name="fragment_article_details_description_padding_top">25dp</dimen>
     <dimen name="fragment_article_details_description_padding_bottom">70dp</dimen>
-    <item name="fragment_article_details_description_line_spacing_multiplier" format="float" type="fraction">1.25</item>
+    <item name="fragment_article_details_description_line_spacing_multiplier" format="float" type="fraction">
+        1.25
+    </item>
     <dimen name="fragment_article_details_description_text_size">18sp</dimen>
 
     <!-- fab -->
@@ -33,4 +36,13 @@
     <dimen name="fab_press_translation_z">12dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="fab_width_height">48dp</dimen>
+
+    <!--
+Refer to App Widget Documentation for margin information
+http://developer.android.com/guide/topics/appwidgets/index.html#CreatingLayout
+    -->
+    <dimen name="widget_margin">8dp</dimen>
+    <dimen name="widget_padding">4dp</dimen>
+    <dimen name="text_size_widget_title">24sp</dimen>
+    <dimen name="text_size_widget_body">20sp</dimen>
 </resources>

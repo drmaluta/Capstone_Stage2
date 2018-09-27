@@ -1,5 +1,9 @@
 package com.maluta.newsnow.models;
 
+import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.Parcelable.Creator;
@@ -12,7 +16,11 @@ import com.google.gson.annotations.SerializedName;
  * Created by admin on 9/11/2018.
  */
 
+@Entity(tableName = "article")
 public class Article implements Parcelable {
+    @PrimaryKey(autoGenerate = true)
+    private long id;
+    @Embedded
     @SerializedName("source")
     @Expose
     private Source source;
@@ -34,11 +42,13 @@ public class Article implements Parcelable {
     @SerializedName("publishedAt")
     @Expose
     private String publishedAt;
+    private boolean favorite = false;
 
     /**
      * No args constructor for use in serialization
      *
      */
+    @Ignore
     public Article() {
     }
 
@@ -52,8 +62,9 @@ public class Article implements Parcelable {
      * @param description
      * @param url
      */
-    public Article(Source source, String author, String title, String description, String url, String urlToImage, String publishedAt) {
+    public Article(long id, Source source, String author, String title, String description, String url, String urlToImage, String publishedAt, boolean favorite) {
         super();
+        this.id = id;
         this.source = source;
         this.author = author;
         this.title = title;
@@ -61,7 +72,12 @@ public class Article implements Parcelable {
         this.url = url;
         this.urlToImage = urlToImage;
         this.publishedAt = publishedAt;
+        this.favorite = favorite;
     }
+
+    public long getId() {return id;}
+
+    public void setId(long id) {this.id = id;}
 
     public Source getSource() {
         return source;
@@ -124,6 +140,14 @@ public class Article implements Parcelable {
         this.publishedAt = publishedAt;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
     public final static Parcelable.Creator<Article> CREATOR = new Creator<Article>() {
 
 
@@ -141,6 +165,7 @@ public class Article implements Parcelable {
     };
 
     private Article(Parcel in) {
+        this.id = in.readLong();
         this.source = ((Source) in.readValue((Source.class.getClassLoader())));
         this.author = in.readString();
         this.title = in.readString();
@@ -148,9 +173,11 @@ public class Article implements Parcelable {
         this.url = in.readString();
         this.urlToImage = in.readString();
         this.publishedAt = in.readString();
+        this.favorite = in.readByte() != 0;
     }
 
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
         dest.writeValue(source);
         dest.writeString(author);
         dest.writeString(title);
@@ -158,6 +185,7 @@ public class Article implements Parcelable {
         dest.writeString(url);
         dest.writeString(urlToImage);
         dest.writeString(publishedAt);
+        dest.writeByte((byte) (favorite ? 1 : 0));
     }
 
     public int describeContents() {

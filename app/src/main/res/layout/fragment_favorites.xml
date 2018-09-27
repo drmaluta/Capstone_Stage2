@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/favorites_recycler_view"
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/favorites_nested_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:padding="@dimen/list_side_margin"
-        android:scrollbarStyle="outsideOverlay" />
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <ProgressBar
-        android:id="@+id/favorites_progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:visibility="invisible"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/favorites_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:padding="@dimen/list_side_margin"
+            android:scrollbarStyle="outsideOverlay" />
+
+    </android.support.v4.widget.NestedScrollView>
 
 </RelativeLayout>

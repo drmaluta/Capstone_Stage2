@@ -31,7 +31,11 @@ public class DateConverter {
 
     public static String dateToShortDateFormat(Context context,String date) {
         Locale locale = context.getResources().getConfiguration().locale;
-
-        return DateFormat.getDateInstance(DateFormat.SHORT, locale).format(getDate(date, Date_TMDB));
+        try {
+            return DateFormat.getDateInstance(DateFormat.SHORT, locale).format(getDate(date, Date_TMDB));
+        } catch (NullPointerException e){
+            Timber.d(String.valueOf(R.string.release_date_error), e);
+        }
+        return "";
     }
 }

@@ -1,12 +1,16 @@
 package com.maluta.newsnow.fragments;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,10 +21,12 @@ import com.maluta.newsnow.R;
 import com.maluta.newsnow.adapters.ArticleListAdapter;
 import com.maluta.newsnow.interfaces.OnTaskCompleted;
 import com.maluta.newsnow.models.Article;
+import com.maluta.newsnow.models.MainViewModel;
 import com.maluta.newsnow.utils.AllNewsAsyncTask;
 import com.maluta.newsnow.utils.PaginationScrollListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,7 +36,8 @@ import timber.log.Timber;
  * Created by admin on 9/11/2018.
  */
 
-public class AllNewsFragment extends Fragment implements ArticleListAdapter.ItemClickListener{
+public class AllNewsFragment extends Fragment implements ArticleListAdapter.ItemClickListener,
+        SharedPreferences.OnSharedPreferenceChangeListener {
     @BindView(R.id.all_news_swipe_refresh_layout)
     SwipeRefreshLayout refreshLayout;
     @BindView(R.id.all_news_rv)
@@ -45,6 +52,8 @@ public class AllNewsFragment extends Fragment implements ArticleListAdapter.Item
     // limiting to 5 for this tutorial, since total pages in actual API is very large. Feel free to modify.
     private int TOTAL_PAGES = 5;
     private int currentPage = PAGE_START;
+
+
 
     public interface AllNewsArticleListener {
         void onAllNewsArticleClicked(ArrayList<Article> articles, int  pos);
@@ -67,6 +76,9 @@ public class AllNewsFragment extends Fragment implements ArticleListAdapter.Item
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_news, container, false);
         ButterKnife.bind(this, view);
+
+        PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext())
+                .registerOnSharedPreferenceChangeListener(this);
 
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -115,20 +127,39 @@ public class AllNewsFragment extends Fragment implements ArticleListAdapter.Item
         return view;
     }
 
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Context context = getActivity().getApplicationContext();
+        if (key.equals(context.getString(R.string.pref_language_key)) || key.equals(context.getString(R.string.pref_sources_key))){
+            currentPage = PAGE_START;
+            articleListAdapter.clearAll();
+            loadFirstPage();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        PreferenceManager.getDefaultSharedPreferences(getActivity().getApplicationContext())
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
     private void loadFirstPage(){
         OnTaskCompleted onTaskCompleted = new OnTaskCompleted() {
             @Override
             public void onFetchArticles(ArrayList<Article> articles) {
-                mArticles = articles;
-                Timber.d("mArticles.size = " + mArticles.size());
-                articleListAdapter.setData(mArticles);
-                refreshLayout.setRefreshing(false);
-                if (currentPage == TOTAL_PAGES){
+                if (!articles.isEmpty()) {
+                    mArticles = articles;
+                    Timber.d("mArticles.size = " + mArticles.size());
+                    articleListAdapter.setData(mArticles);
+                    refreshLayout.setRefreshing(false);
+                }
+                if (currentPage == TOTAL_PAGES || articles.isEmpty()){
                     isLastPage = true;
                 }
             }
         };
-        AllNewsAsyncTask articlesTask = new AllNewsAsyncTask(onTaskCompleted, currentPage);
+        AllNewsAsyncTask articlesTask = new AllNewsAsyncTask(onTaskCompleted, getActivity().getApplicationContext(), currentPage);
         articlesTask.execute();
     }
 
@@ -136,19 +167,23 @@ public class AllNewsFragment extends Fragment implements ArticleListAdapter.Item
         OnTaskCompleted onTaskCompleted = new OnTaskCompleted() {
             @Override
             public void onFetchArticles(ArrayList<Article> articles) {
-                isLoading = false;
-                mArticles = articles;
-                Timber.d("mArticles.size = " + mArticles.size());
-                articleListAdapter.addAll(mArticles);
-                refreshLayout.setRefreshing(false);
-                if (currentPage == TOTAL_PAGES){
+                if (!articles.isEmpty()) {
+                    isLoading = false;
+                    mArticles = articles;
+                    Timber.d("mArticles.size = " + mArticles.size());
+                    articleListAdapter.addAll(mArticles);
+                    refreshLayout.setRefreshing(false);
+                }
+                if (currentPage == TOTAL_PAGES || articles.isEmpty()){
                     isLastPage = true;
                 }
             }
         };
-        AllNewsAsyncTask articlesTask = new AllNewsAsyncTask(onTaskCompleted, currentPage);
+        AllNewsAsyncTask articlesTask = new AllNewsAsyncTask(onTaskCompleted, getActivity().getApplicationContext(), currentPage);
         articlesTask.execute();
     }
+
+
 
     @Override
     public void onClick(ArrayList<Article> articles, int position) {

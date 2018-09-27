@@ -83,7 +83,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         String articleTitle = article.getTitle();
         holder.mArticleTitleTv.setText(articleTitle);
 
-        holder.mSourcePublisheOnDateTv.setText(Html.fromHtml((article.getSource().getName() == null ? "" : String.format(context.getResources().getString(R.string.source_link), article.getSource().getName(), article.getUrl())) + " " + (article.getPublishedAt() == null ? "" : String.format(context.getResources().getString(R.string.on_date), DateConverter.dateToShortDateFormat(context, article.getPublishedAt())))));
+        holder.mSourcePublisheOnDateTv.setText(Html.fromHtml((article.getSource().getName() == null ? "" : String.format(context.getResources().getString(R.string.source_link), article.getSource().getName(), article.getUrl())) + " " + ((article.getPublishedAt() == null || TextUtils.isEmpty(article.getPublishedAt())) ? "" : String.format(context.getResources().getString(R.string.on_date), DateConverter.dateToShortDateFormat(context, article.getPublishedAt())))));
 
     }
 
