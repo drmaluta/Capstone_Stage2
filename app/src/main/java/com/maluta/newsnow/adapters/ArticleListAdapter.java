@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +16,6 @@ import com.maluta.newsnow.models.Article;
 import com.maluta.newsnow.utils.DateConverter;
 import com.squareup.picasso.Picasso;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -27,8 +25,8 @@ import butterknife.ButterKnife;
  * Created by admin on 9/15/2018.
  */
 
-public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.ArticleHolder> {
-    private ArrayList<Article> articles = new ArrayList<>();
+public class ArticleListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    protected ArrayList<Object> data = new ArrayList<>();
     private ItemClickListener mItemClickListener;
 
     public interface ItemClickListener {
@@ -40,25 +38,29 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         mItemClickListener = itemClickListener;
     }
 
-    public void setData (ArrayList<Article> items){
-        articles = items;
+    public void setData (ArrayList<Object> items){
+        data = items;
         notifyDataSetChanged();
     }
 
-    public void addAll (ArrayList<Article> items){
-        articles.addAll(items);
+    public ArrayList<Object> getData() {
+        return data;
+    }
+
+    public void addAll (ArrayList<Object> items){
+        data.addAll(items);
         notifyDataSetChanged();
     }
 
     public void clearAll (){
-        articles.clear();
+        data.clear();
         notifyDataSetChanged();
     }
 
 
     @NonNull
     @Override
-    public ArticleHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.article_item, parent, false);
 
@@ -66,8 +68,8 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ArticleHolder holder, int position) {
-        final Article article = articles.get(position);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        final Article article = (Article)data.get(position);
         Context context = holder.itemView.getContext();
         String imageUri = article.getUrlToImage();
 
@@ -75,21 +77,31 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
             Picasso.with(context).load(imageUri)
                     .placeholder(R.drawable.ic_newspaper_color)
                     .error(R.drawable.ic_newspaper_color)
-                    .into(holder.mArticleIv);
+                    .resize(320, 210)
+                    .into(((ArticleHolder)holder).mArticleIv);
         } else {
-            holder.mArticleIv.setImageResource(R.drawable.ic_newspaper_color);
+            ((ArticleHolder)holder).mArticleIv.setImageResource(R.drawable.ic_newspaper_color);
         }
 
         String articleTitle = article.getTitle();
-        holder.mArticleTitleTv.setText(articleTitle);
+        ((ArticleHolder)holder).mArticleTitleTv.setText(articleTitle);
 
-        holder.mSourcePublisheOnDateTv.setText(Html.fromHtml((article.getSource().getName() == null ? "" : String.format(context.getResources().getString(R.string.source_link), article.getSource().getName(), article.getUrl())) + " " + ((article.getPublishedAt() == null || TextUtils.isEmpty(article.getPublishedAt())) ? "" : String.format(context.getResources().getString(R.string.on_date), DateConverter.dateToShortDateFormat(context, article.getPublishedAt())))));
+        ((ArticleHolder)holder).mSourcePublishedOnDateTv.setText(Html.fromHtml((article.getSource().getName() == null ? "" : String.format(context.getResources().getString(R.string.source_link), article.getSource().getName(), article.getUrl())) + " " + ((article.getPublishedAt() == null || TextUtils.isEmpty(article.getPublishedAt())) ? "" : String.format(context.getResources().getString(R.string.on_date), DateConverter.dateToShortDateFormat(context, article.getPublishedAt())))));
 
     }
 
     @Override
     public int getItemCount() {
-        return articles == null ? 0 : articles.size();
+        return data == null ? 0 : data.size();
+    }
+
+    private ArrayList<Article> getArticlesData() {
+        ArrayList<Article> result = new ArrayList<>();
+        for (Object o : data) {
+            if (o instanceof Article)
+                result.add((Article) o);
+        }
+        return result;
     }
 
     public class ArticleHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -98,7 +110,7 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         @BindView(R.id.tv_title)
         TextView mArticleTitleTv;
         @BindView(R.id.tv_source_published_on_date)
-        TextView mSourcePublisheOnDateTv;
+        TextView mSourcePublishedOnDateTv;
 
         public ArticleHolder(View itemView) {
             super(itemView);
@@ -109,7 +121,9 @@ public class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAdapter.
         @Override
         public void onClick(View v) {
             int position = getAdapterPosition();
-            mItemClickListener.onClick(articles, position);
+            Article article = (Article)data.get(position);
+            ArrayList<Article> articles = getArticlesData();
+            mItemClickListener.onClick(getArticlesData(), articles.indexOf(article));
         }
     }
 }

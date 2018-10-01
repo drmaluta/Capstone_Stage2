@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 27
-    buildToolsVersion '27.0.3'
+    buildToolsVersion '28.0.2'
     defaultConfig {
         applicationId "com.maluta.newsnow"
         minSdkVersion 21
@@ -22,17 +22,40 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    flavorDimensions "type"
+
+    productFlavors {
+        free {
+            applicationId 'com.maluta.newsnow.free'
+            versionName "1.0­free"
+            dimension "type"
+        }
+        paid {
+            applicationId 'com.maluta.newsnow.paid'
+            versionName "1.0­paid"
+            dimension "type"
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:appcompat-v7:$androidSupportVersion"
+
+    // Implementations due for a warning about different library versions
+    // solutions found on Stack Overflow - http://bit.ly/2HvNHcz
+    implementation "com.android.support:customtabs:$androidSupportVersion"
+    implementation "com.android.support:support-media-compat:$androidSupportVersion"
+    implementation "com.android.support:support-v4:$androidSupportVersion"
+
     implementation "com.android.support:preference-v7:$androidSupportVersion"
     implementation "com.android.support:design:$androidSupportVersion"
     implementation "com.android.support:cardview-v7:$androidSupportVersion"
     implementation "com.squareup.picasso:picasso:$picassoSupportVersion"
     implementation "com.jakewharton:butterknife:$butterknifeSupportVersion"
     implementation 'com.android.support:support-v4:27.1.1'
+    implementation 'com.google.firebase:firebase-core:16.0.3'
     annotationProcessor "com.jakewharton:butterknife-compiler:$butterknifeSupportVersion"
     implementation "com.squareup.retrofit2:retrofit:$retrofitSupportVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitSupportVersion"
@@ -43,7 +66,9 @@ dependencies {
     implementation 'com.squareup.okhttp3:logging-interceptor:3.10.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'com.jakewharton.timber:timber:4.7.1'
+    freeImplementation 'com.google.android.gms:play-services-ads:15.0.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+apply plugin: 'com.google.gms.google-services'

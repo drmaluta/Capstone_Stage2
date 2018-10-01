@@ -1,7 +1,5 @@
 package com.maluta.newsnow.fragments;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -21,12 +19,10 @@ import com.maluta.newsnow.R;
 import com.maluta.newsnow.adapters.ArticleListAdapter;
 import com.maluta.newsnow.interfaces.OnTaskCompleted;
 import com.maluta.newsnow.models.Article;
-import com.maluta.newsnow.models.MainViewModel;
 import com.maluta.newsnow.utils.AllNewsAsyncTask;
 import com.maluta.newsnow.utils.PaginationScrollListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +40,7 @@ public class AllNewsFragment extends Fragment implements ArticleListAdapter.Item
     RecyclerView mArticlesRv;
 
     private ArrayList<Article> mArticles = new ArrayList<>();
-    private ArticleListAdapter articleListAdapter;
+    protected ArticleListAdapter articleListAdapter;
     private AllNewsArticleListener articleClickListener;
     private static final int PAGE_START = 1;
     private boolean isLoading = false;
@@ -151,7 +147,7 @@ public class AllNewsFragment extends Fragment implements ArticleListAdapter.Item
                 if (!articles.isEmpty()) {
                     mArticles = articles;
                     Timber.d("mArticles.size = " + mArticles.size());
-                    articleListAdapter.setData(mArticles);
+                    setAdapterData(mArticles);
                     refreshLayout.setRefreshing(false);
                 }
                 if (currentPage == TOTAL_PAGES || articles.isEmpty()){
@@ -171,7 +167,7 @@ public class AllNewsFragment extends Fragment implements ArticleListAdapter.Item
                     isLoading = false;
                     mArticles = articles;
                     Timber.d("mArticles.size = " + mArticles.size());
-                    articleListAdapter.addAll(mArticles);
+                    addAdapterData(mArticles);
                     refreshLayout.setRefreshing(false);
                 }
                 if (currentPage == TOTAL_PAGES || articles.isEmpty()){
@@ -183,7 +179,13 @@ public class AllNewsFragment extends Fragment implements ArticleListAdapter.Item
         articlesTask.execute();
     }
 
+    protected void setAdapterData(ArrayList<Article> articles) {
+        articleListAdapter.setData(new ArrayList<Object>(articles));
+    }
 
+    protected void addAdapterData(ArrayList<Article> articles) {
+        articleListAdapter.addAll(new ArrayList<Object>(articles));
+    }
 
     @Override
     public void onClick(ArrayList<Article> articles, int position) {

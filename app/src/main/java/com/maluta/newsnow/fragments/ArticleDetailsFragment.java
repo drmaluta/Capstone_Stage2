@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.maluta.newsnow.ArticleDetailsActivity;
 import com.maluta.newsnow.R;
 import com.maluta.newsnow.database.AppDatabase;
@@ -56,6 +57,7 @@ public class ArticleDetailsFragment extends Fragment {
     private AppDatabase mDb;
     private Context mContext;
     private boolean mFavorite;
+    private FirebaseAnalytics firebaseAnalytics;
 
 
 
@@ -79,6 +81,11 @@ public class ArticleDetailsFragment extends Fragment {
 
         mContext = getActivity().getApplicationContext();
 
+        // Obtain the Firebase Analytics instance.
+        firebaseAnalytics = FirebaseAnalytics.getInstance(mContext);
+
+        //Sets whether analytics collection is enabled for this app on this device.
+        firebaseAnalytics.setAnalyticsCollectionEnabled(true);
     }
 
     @Override
@@ -135,6 +142,11 @@ public class ArticleDetailsFragment extends Fragment {
                         .setType("text/plain")
                         .setText(mArticle.getTitle())
                         .getIntent(), getString(R.string.action_share)));
+
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mArticle.getTitle());
+                //Logs an app event.
+                firebaseAnalytics.logEvent("SHARE_ARTICLE", bundle);
             }
         });
     }
@@ -144,13 +156,20 @@ public class ArticleDetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 mDb = AppDatabase.getInstance(mContext);
+                Bundle bundle = new Bundle();
                 if (mFavorite) {
                     mFavorite = false;
                     mBookmarkFAB.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_bookmark_empty));
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mArticle.getTitle());
+                    //Logs an app event.
+                    firebaseAnalytics.logEvent("DELETE_FROM_FAVORITES", bundle);
                     deleteArticle();
                 } else {
                     mFavorite = true;
                     mBookmarkFAB.setImageDrawable(mContext.getResources().getDrawable(R.drawable.ic_bookmark));
+                    bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, mArticle.getTitle());
+                    //Logs an app event.
+                    firebaseAnalytics.logEvent("ADD_TO_FAVORITES", bundle);
                     addArticle();
                 }
                 WidgetUpdateService.startActionUpdateFavoriteArticlesWidgets(mContext);

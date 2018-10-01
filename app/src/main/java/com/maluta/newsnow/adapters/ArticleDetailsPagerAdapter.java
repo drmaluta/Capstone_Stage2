@@ -20,10 +20,10 @@ public class ArticleDetailsPagerAdapter extends FragmentPagerAdapter {
 
     public ArticleDetailsPagerAdapter(FragmentManager fm, ArrayList<Article> articles) {
         super(fm);
-        setArticless(articles);
+        setArticles(articles);
     }
 
-    public void setArticless(@NonNull ArrayList<Article> articles) {
+    private void setArticles(@NonNull ArrayList<Article> articles) {
         this.articles = articles;
         notifyDataSetChanged();
     }

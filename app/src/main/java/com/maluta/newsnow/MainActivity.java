@@ -3,22 +3,23 @@ package com.maluta.newsnow;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.maluta.newsnow.adapters.PagerAdapter;
 import com.maluta.newsnow.fragments.AllNewsFragment;
 import com.maluta.newsnow.fragments.FavoritesFragment;
 import com.maluta.newsnow.fragments.TopNewsFragment;
 import com.maluta.newsnow.models.Article;
 import com.maluta.newsnow.models.MainViewModel;
-
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements TopNewsFragment.A
     public static final String EXTRA_SELECTED_INDEX = "extra.selected_index";
     private ArrayList<Article> mFavoriteArticles = new ArrayList<>();
     private ArrayList<Article> mArticles = new ArrayList<>();
+    private FirebaseAnalytics firebaseAnalytics;
 
 
     @Override
@@ -49,6 +51,12 @@ public class MainActivity extends AppCompatActivity implements TopNewsFragment.A
         ButterKnife.bind(this);
         setSupportActionBar(mToolBar);
         getSupportActionBar().setTitle(R.string.app_name);
+
+        // Obtain the Firebase Analytics instance.
+        firebaseAnalytics = FirebaseAnalytics.getInstance(this);
+
+        //Sets whether analytics collection is enabled for this app on this device.
+        firebaseAnalytics.setAnalyticsCollectionEnabled(true);
 
 
         tabLayout.addTab(tabLayout.newTab().setText("TOP NEWS"));
@@ -135,6 +143,12 @@ public class MainActivity extends AppCompatActivity implements TopNewsFragment.A
         intent.putParcelableArrayListExtra(EXTRA_ARTICLES, mArticles);
         intent.putExtra(EXTRA_SELECTED_INDEX, position);
         startActivity(intent);
+
+        Article article = mArticles.get(position);
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, article.getTitle());
+        //Logs an app event.
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
     @Override
@@ -146,6 +160,12 @@ public class MainActivity extends AppCompatActivity implements TopNewsFragment.A
         intent.putParcelableArrayListExtra(EXTRA_ARTICLES, mArticles);
         intent.putExtra(EXTRA_SELECTED_INDEX, position);
         startActivity(intent);
+
+        Article article = mArticles.get(position);
+        Bundle bundle = new Bundle();
+        bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, article.getTitle());
+        //Logs an app event.
+        firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
     }
 
     @Override

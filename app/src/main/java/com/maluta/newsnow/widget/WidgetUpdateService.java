@@ -8,9 +8,6 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 
 import com.maluta.newsnow.R;
-import com.maluta.newsnow.models.Article;
-
-import java.util.ArrayList;
 
 /**
  * Created by admin on 9/25/2018.
@@ -18,7 +15,6 @@ import java.util.ArrayList;
 
 public class WidgetUpdateService extends IntentService {
     public static final String ACTION_UPDATE_FAVORITE_ARTICLES_WIDGET = "update_widget_list";
-    private static final String ARTICLES = "articles";
 
 
     public WidgetUpdateService() {
@@ -46,6 +42,5 @@ public class WidgetUpdateService extends IntentService {
         int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(this, FavoriteArticleWidget.class));
         appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_grid_view);
         FavoriteArticleWidget.updateWidgets(this, appWidgetManager, appWidgetIds);
-        //appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetIds, R.id.widget_grid_view);
     }
 }

@@ -10,9 +10,7 @@ import android.widget.RemoteViewsService;
 
 import com.maluta.newsnow.R;
 import com.maluta.newsnow.database.AppDatabase;
-import com.maluta.newsnow.database.AppExecutors;
 import com.maluta.newsnow.models.Article;
-import com.maluta.newsnow.utils.ArticlesAsyncTaskLoader;
 import com.maluta.newsnow.utils.DateConverter;
 import com.squareup.picasso.Picasso;
 
@@ -36,7 +34,6 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     private static final String EXTRA_SELECTED_INDEX = "extra.selected_index";
     private Context mContext;
     private List<Article> mArticles;
-    //private AppDatabase mDb;
 
     public GridRemoteViewsFactory(Context context){
         this.mContext = context;
@@ -52,25 +49,12 @@ class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
     @Override
     public void onDataSetChanged() {
         final AppDatabase mDb = AppDatabase.getInstance(mContext);
-        AppExecutors.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                mArticles = mDb.articleDao().getAllArticles();
-            }
-        });
-
-        /*new ArticlesAsyncTaskLoader(mContext){
-            @Override
-            public void deliverResult(List<Article> data) {
-                super.deliverResult(data);
-                GridRemoteViewsFactory.this.mArticles = data;
-            }
-        }.startLoading()*/;
+        mArticles = mDb.articleDao().getAllArticles();
     }
 
     @Override
     public void onDestroy() {
-        //mArticles = null;
+        mArticles = null;
     }
 
     @Override

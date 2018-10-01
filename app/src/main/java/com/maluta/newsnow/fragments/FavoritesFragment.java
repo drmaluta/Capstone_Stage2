@@ -44,7 +44,7 @@ public class FavoritesFragment extends Fragment implements ArticleListAdapter.It
                 mArticles = (ArrayList<Article>) articles;
             }
             Timber.d("mArticles.size = " + mArticles.size());
-            articleListAdapter.setData(mArticles);
+            articleListAdapter.setData(articlesToObject(mArticles));
             mArticlesRv.setAdapter(articleListAdapter);
 
         }
@@ -93,6 +93,10 @@ public class FavoritesFragment extends Fragment implements ArticleListAdapter.It
 
 
         return view;
+    }
+
+    private ArrayList<Object> articlesToObject(ArrayList<Article> articles){
+        return new ArrayList<Object>(articles);
     }
 
     @Override
